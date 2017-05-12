@@ -12,7 +12,7 @@ import (
 type NaturalUser struct {
 	User
 	FirstName, LastName string
-	Address             string
+	Address             *Address
 	Birthday            int64
 	Nationality         string
 	CountryOfResidence  string
@@ -22,6 +22,16 @@ type NaturalUser struct {
 	ProofOfAddress      string
 	service             *MangoPay // Current service
 	wallets             WalletList
+}
+
+// Address ...
+type Address struct {
+	AddressLine1 string
+	AddressLine2 string
+	City         string
+	Region       string
+	PostalCode   string
+	Country      string
 }
 
 func (u *NaturalUser) String() string {
