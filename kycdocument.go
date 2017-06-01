@@ -34,7 +34,7 @@ const (
 	REFUSED
 )
 
-var kycDocumentStatuses = map[KYCDocumentStatus]string{
+var KYCDocumentStatuses = map[KYCDocumentStatus]string{
 	CREATED:          "CREATED",
 	VALIDATION_ASKED: "VALIDATION_ASKED",
 	VALIDATED:        "VALIDATED",
@@ -143,7 +143,7 @@ func (d *KYCDocument) AddPage(pageData string) error {
 // Submit ...
 func (d *KYCDocument) Submit(status KYCDocumentStatus) error {
 
-	d.Status = kycDocumentStatuses[status]
+	d.Status = KYCDocumentStatuses[status]
 
 	data := JsonObject{}
 	j, err := json.Marshal(d)
