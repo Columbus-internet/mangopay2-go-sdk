@@ -90,7 +90,7 @@ func (m *MangoPay) NewKYCDocument(user Consumer, kycDocumentType KYCDocumentType
 	serv := d.service
 	*d = *(doc.(*KYCDocument))
 	d.service = serv
-	return nil, nil
+	return d, nil
 }
 
 // KYCDocuments ...
