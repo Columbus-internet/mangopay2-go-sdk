@@ -80,7 +80,7 @@ func (m *MangoPay) NewKYCDocument(user Consumer, kycDocumentType KYCDocumentType
 	}
 
 	for _, field := range []string{"Id", "CreationDate", "Status", "RefusedReasonMessage", "RefusedReasonType"} {
-		data[field] = int(data[field].(float64))
+		delete(data, field)
 	}
 
 	doc, err := d.service.anyRequest(new(KYCDocument), actionCreateUserKYCDocument, data)
