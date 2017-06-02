@@ -12,7 +12,7 @@ import (
 type NaturalUser struct {
 	User
 	FirstName, LastName string
-	Address             *Address
+	Address             Address
 	Birthday            int64
 	Nationality         string
 	CountryOfResidence  string
