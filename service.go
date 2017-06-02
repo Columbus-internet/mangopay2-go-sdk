@@ -140,7 +140,7 @@ func (s *MangoPay) request(ma mangoAction, data JsonObject) (*http.Response, err
 
 	body, err := json.Marshal(data)
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("cannot unmarshal data: %s", err)
 	}
 	resp, err := s.rawRequest(mr.Method, "application/json",
 		fmt.Sprintf("%s%s%s", s.rootURL, s.clientId, path), body, true)
@@ -159,7 +159,7 @@ func (s *MangoPay) rawRequest(method, contentType string, uri string, body []byt
 
 	req, err := http.NewRequest(method, u.String(), strings.NewReader(string(body)))
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("new request issue: %s", err)
 	}
 
 	// Set header for basic auth
@@ -196,11 +196,11 @@ func (s *MangoPay) rawRequest(method, contentType string, uri string, body []byt
 	resp, err := DefaultClient.Do(req)
 
 	// Handle reponse status code
-	if err == nil && resp.StatusCode != http.StatusOK {
+	if err == nil && resp.StatusCode != http.StatusOK && resp.StatusCode != http.StatusNoContent {
 		j := JsonObject{}
 		err = s.unMarshalJSONResponse(resp, &j)
 		if err != nil {
-			return nil, err
+			return nil, fmt.Errorf("unmarshal resp error: %s\n%v", err, resp)
 		}
 		errmsg := ""
 		if msg, ok := j["Message"]; ok {
@@ -237,8 +237,12 @@ func (m *MangoPay) unMarshalJSONResponse(resp *http.Response, v interface{}) err
 		fmt.Printf("\n%s\n", string(b))
 		fmt.Println("<<<<<<<<<<<<<<<<<<<<<< DEBUG RESPONSE")
 	}
-	if err := json.Unmarshal(b, v); err != nil {
-		return err
+	if len(b) > 0 {
+		if err := json.Unmarshal(b, v); err != nil {
+			return err
+		}
+	} else {
+		v = new(interface{})
 	}
 	return nil
 }
@@ -247,7 +251,7 @@ func (m *MangoPay) unMarshalJSONResponse(resp *http.Response, v interface{}) err
 func (m *MangoPay) anyRequest(o interface{}, action mangoAction, data JsonObject) (interface{}, error) {
 	resp, err := m.request(action, data)
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("request error: %s", err)
 	}
 
 	t := reflect.TypeOf(o)
@@ -257,7 +261,7 @@ func (m *MangoPay) anyRequest(o interface{}, action mangoAction, data JsonObject
 	}
 	ins := reflect.New(t).Interface()
 	if err := m.unMarshalJSONResponse(resp, ins); err != nil {
-		return nil, err
+		return nil, fmt.Errorf("response error: %s\n, %v", err, resp)
 	}
 	return ins, nil
 }

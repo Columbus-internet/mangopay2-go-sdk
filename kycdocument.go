@@ -3,6 +3,7 @@ package mango
 import (
 	"encoding/json"
 	"errors"
+	"log"
 )
 
 // KYCDocumentType represents type of KYC document
@@ -43,10 +44,10 @@ var KYCDocumentStatuses = map[KYCDocumentStatus]string{
 
 // KYCDocument ...
 type KYCDocument struct {
-	ID                   string
+	Id                   string
 	CreationDate         int64
 	Tag                  string
-	UserID               string
+	UserId               string
 	Status               string
 	RefusedReasonMessage string
 	RefusedReasonType    string
@@ -65,7 +66,7 @@ func (m *MangoPay) NewKYCDocument(user Consumer, kycDocumentType KYCDocumentType
 		return nil, errors.New("unable to create KYC document: empty user ID")
 	}
 	d := &KYCDocument{
-		UserID:       id,
+		UserId:       id,
 		documentType: kycDocumentType,
 	}
 	d.service = m
@@ -83,8 +84,11 @@ func (m *MangoPay) NewKYCDocument(user Consumer, kycDocumentType KYCDocumentType
 		delete(data, field)
 	}
 
+	data["Type"] = kycDocumentTypes[d.documentType]
+
 	doc, err := d.service.anyRequest(new(KYCDocument), actionCreateUserKYCDocument, data)
 	if err != nil {
+		log.Println(data)
 		return nil, err
 	}
 	serv := d.service
@@ -128,7 +132,7 @@ func (d *KYCDocument) AddPage(pageData string) error {
 	}
 
 	for _, field := range []string{"CreationDate", "Status", "RefusedReasonMessage", "RefusedReasonType"} {
-		data[field] = int(data[field].(float64))
+		delete(data, field)
 	}
 
 	data["File"] = pageData
@@ -155,7 +159,7 @@ func (d *KYCDocument) Submit(status KYCDocumentStatus) error {
 	}
 
 	for _, field := range []string{"CreationDate", "RefusedReasonMessage", "RefusedReasonType"} {
-		data[field] = int(data[field].(float64))
+		delete(data, field)
 	}
 
 	_, err = d.service.anyRequest(new(interface{}), actionSubmitUserKYCDocument, data)
