@@ -44,7 +44,8 @@ type CardRegistration struct {
 
 // CardRegistrationData ...
 type CardRegistrationData struct {
-	RegistrationData string
+	CardRegistrationID string
+	RegistrationData   string
 }
 
 func (c *CardRegistration) String() string {
