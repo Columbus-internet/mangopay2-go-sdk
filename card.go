@@ -42,6 +42,11 @@ type CardRegistration struct {
 	isInitialized bool
 }
 
+// CardRegistrationData ...
+type CardRegistrationData struct {
+	RegistrationData string
+}
+
 func (c *CardRegistration) String() string {
 	return struct2string(c)
 }
@@ -227,5 +232,7 @@ func (m *MangoPay) CardRegistration(id string) (*CardRegistration, error) {
 	if err != nil {
 		return nil, err
 	}
-	return any.(*CardRegistration), nil
+	result := any.(*CardRegistration)
+	result.isInitialized = true
+	return result, nil
 }
