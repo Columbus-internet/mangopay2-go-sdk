@@ -220,3 +220,12 @@ func (c *CardRegistration) Register(registrationData string) error {
 	c.isInitialized = isr
 	return nil
 }
+
+// CardRegistration ...
+func (m *MangoPay) CardRegistration(id string) (*CardRegistration, error) {
+	any, err := m.anyRequest(new(CardRegistration), actionFetchCardRegistration, JsonObject{"Id": id})
+	if err != nil {
+		return nil, err
+	}
+	return any.(*CardRegistration), nil
+}
