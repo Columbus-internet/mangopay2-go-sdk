@@ -37,6 +37,7 @@ const (
 	actionCreateDirectPayIn
 
 	actionCreateCardRegistration
+	actionFetchCardRegistration
 	actionSendCardRegistrationData
 
 	actionFetchCard
@@ -177,6 +178,11 @@ var mangoRequests = map[mangoAction]mangoRequest{
 		"POST",
 		"/cardregistrations",
 		nil,
+	},
+	actionFetchCardRegistration: mangoRequest{
+		"GET",
+		"/cardregistrations/{{Id}}",
+		JsonObject{"Id": ""},
 	},
 	actionSendCardRegistrationData: mangoRequest{
 		"PUT",
