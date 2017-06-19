@@ -235,5 +235,6 @@ func (m *MangoPay) CardRegistration(id string) (*CardRegistration, error) {
 	}
 	result := any.(*CardRegistration)
 	result.isInitialized = true
+	result.service = m
 	return result, nil
 }
