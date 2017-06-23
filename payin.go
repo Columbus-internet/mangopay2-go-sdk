@@ -50,10 +50,13 @@ func (p *PayIn) String() string {
 // DirectPayIn is used to process a payment with registered (tokenized) cards.
 type DirectPayIn struct {
 	PayIn
-	SecureModeReturnUrl string
-	CardId              string
-	DebitedWalletId     string
-	service             *MangoPay
+	SecureModeReturnUrl   string
+	CardId                string
+	DebitedWalletId       string
+	SecureModeRedirectUrl string
+	SecureModeNeeded      bool
+	StatementDescriptor   string
+	service               *MangoPay
 }
 
 func (p *DirectPayIn) String() string {
@@ -238,7 +241,7 @@ func (p *DirectPayIn) Save() error {
 	}
 
 	// Fields not allowed when creating a tranfer.
-	for _, field := range []string{"Id", "CreationDate", "ExecutionDate", "CreditedFunds", "ResultCode", "ResultMessage", "Status", "ExecutionType", "PaymentType", "SecureMode", "DebitedWalletId", "Type", "Nature"} {
+	for _, field := range []string{"Id", "CreationDate", "ExecutionDate", "CreditedFunds", "ResultCode", "ResultMessage", "Status", "ExecutionType", "PaymentType", "SecureMode", "DebitedWalletId", "Type", "Nature", "SecureModeNeeded", "SecureModeRedirectUrl"} {
 		delete(data, field)
 	}
 
