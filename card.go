@@ -76,7 +76,8 @@ func (m *MangoPay) Card(id string) (*Card, error) {
 	if err != nil {
 		return nil, err
 	}
-	return any.(*Card), nil
+	card := any.(*Card)
+	return card, nil
 }
 
 // Card finds all user's cards.
@@ -236,5 +237,15 @@ func (m *MangoPay) CardRegistration(id string) (*CardRegistration, error) {
 	result := any.(*CardRegistration)
 	result.isInitialized = true
 	result.service = m
+	return result, nil
+}
+
+// CardDeactivation ...
+func (m *MangoPay) CardDeactivation(id string) (*Card, error) {
+	any, err := m.anyRequest(new(Card), actionDeactivateCard, JsonObject{"Id": id, "Active": false})
+	if err != nil {
+		return nil, err
+	}
+	result := any.(*Card)
 	return result, nil
 }
