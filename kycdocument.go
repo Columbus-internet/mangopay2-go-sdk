@@ -108,7 +108,11 @@ func (m *MangoPay) KYCDocuments(user Consumer) (KYCDocumentList, error) {
 	if err != nil {
 		return nil, err
 	}
-	return *(docList.(*KYCDocumentList)), nil
+	docs := *(docList.(*KYCDocumentList))
+	for _, d := range docs {
+		d.service = m
+	}
+	return docs, nil
 }
 
 // KYCDocument ...
@@ -117,7 +121,9 @@ func (m *MangoPay) KYCDocument(id string) (*KYCDocument, error) {
 	if err != nil {
 		return nil, err
 	}
-	return d.(*KYCDocument), nil
+	doc := d.(*KYCDocument)
+	doc.service = m
+	return doc, nil
 }
 
 // AddPage ...
