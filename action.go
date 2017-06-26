@@ -58,6 +58,8 @@ const (
 	actionViewKYCDocument
 	actionCreateUserKYCDocumentPage
 	actionListUserKYCDocuments
+
+	actionCreatePreAuthorization
 )
 
 // JsonObject is used to manage JSON data.
@@ -266,5 +268,10 @@ var mangoRequests = map[mangoAction]mangoRequest{
 		"GET",
 		"/users/{{UserId}}/kyc/documents/",
 		JsonObject{"UserId": ""},
+	},
+	actionCreatePreAuthorization: mangoRequest{
+		"POST",
+		"/preauthorizations/card/direct",
+		nil,
 	},
 }
