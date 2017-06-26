@@ -35,6 +35,7 @@ const (
 	actionFetchPayIn
 	actionCreateWebPayIn
 	actionCreateDirectPayIn
+	actionCreatePreAuthorizedPayIn
 
 	actionCreateCardRegistration
 	actionFetchCardRegistration
@@ -175,6 +176,11 @@ var mangoRequests = map[mangoAction]mangoRequest{
 	actionCreateDirectPayIn: mangoRequest{
 		"POST",
 		"/payins/card/direct",
+		nil,
+	},
+	actionCreatePreAuthorizedPayIn: mangoRequest{
+		"POST",
+		"/payins/preauthorized/direct",
 		nil,
 	},
 	actionCreateCardRegistration: mangoRequest{

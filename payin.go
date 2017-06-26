@@ -63,6 +63,23 @@ func (p *DirectPayIn) String() string {
 	return struct2string(p)
 }
 
+// PreAuthorizedPayIn ...
+type PreAuthorizedPayIn struct {
+	ProcessReply
+	AuthorID           string
+	CreditedUserID     string
+	CreditedWalletID   string
+	DebitedFunds       Money
+	Fees               Money
+	PreauthorizationID string
+
+	service *MangoPay
+}
+
+func (p *PreAuthorizedPayIn) String() string {
+	return struct2string(p)
+}
+
 // WebPayIn hold details about making a payment through a web interface.
 //
 // See http://docs.mangopay.com/api-references/payins/payins-card-web/
@@ -253,6 +270,89 @@ func (p *DirectPayIn) Save() error {
 	*p = *(tr.(*DirectPayIn))
 	p.service = serv
 	p.PayIn.service = serv
+
+	if p.Status == "FAILED" {
+		return &ErrPayInFailed{p.Id, p.ResultMessage}
+	}
+	return nil
+}
+
+// NewPreAuthorizedPayIn creates a card preauthorized payment from a tokenized credit card.
+func (m *MangoPay) NewPreAuthorizedPayIn(from, to Consumer, dst *Wallet, amount, fees Money, preAuthorizationID string) (*PreAuthorizedPayIn, error) {
+	msg := "new preauthorized payIn: "
+	ps := []struct {
+		i   interface{}
+		msg string
+	}{
+		{from, "from parameter"},
+		{to, "to parameter"},
+		{dst, "wallet"},
+	}
+	for _, p := range ps {
+		if p.i == nil {
+			return nil, errors.New(msg + p.msg)
+		}
+	}
+	cons := make([]string, 2)
+	for k, con := range []Consumer{from, to} {
+		id := consumerId(con)
+		cons[k] = id
+	}
+
+	// Check Ids
+	for _, i := range []struct{ v, msg string }{
+		{cons[0], "from consumer"},
+		{cons[1], "to consumer"},
+		{dst.Id, "wallet"},
+		{preAuthorizationID, "preAuthorization"},
+	} {
+		if i.v == "" {
+			return nil, fmt.Errorf("empty %s id", i.msg)
+		}
+	}
+
+	p := &PreAuthorizedPayIn{
+		AuthorID:           cons[0],
+		CreditedUserID:     cons[1],
+		CreditedWalletID:   dst.Id,
+		DebitedFunds:       amount,
+		Fees:               fees,
+		PreauthorizationID: preAuthorizationID,
+		service:            m,
+	}
+	p.service = m
+	return p, nil
+}
+
+// Save sends an HTTP query to create a preauthorized payIn. Upon successful creation,
+// it may return an ErrPayInFailed error if the payment has failed.
+func (p *PreAuthorizedPayIn) Save() error {
+	data := JsonObject{}
+	j, err := json.Marshal(p)
+	if err != nil {
+		return err
+	}
+	if err := json.Unmarshal(j, &data); err != nil {
+		return err
+	}
+
+	// Force float64 to int conversion after unmarshalling.
+	for _, field := range []string{"CreationDate", "ExecutionDate"} {
+		data[field] = int(data[field].(float64))
+	}
+
+	// Fields not allowed when creating a tranfer.
+	for _, field := range []string{"Id", "CreationDate", "ExecutionDate", "ResultCode", "ResultMessage", "Status", "ExecutionType", "PaymentType", "SecureMode", "Type", "Nature", "SecureModeNeeded", "SecureModeRedirectUrl"} {
+		delete(data, field)
+	}
+
+	tr, err := p.service.anyRequest(new(PreAuthorizedPayIn), actionCreatePreAuthorizedPayIn, data)
+	if err != nil {
+		return err
+	}
+	serv := p.service
+	*p = *(tr.(*PreAuthorizedPayIn))
+	p.service = serv
 
 	if p.Status == "FAILED" {
 		return &ErrPayInFailed{p.Id, p.ResultMessage}

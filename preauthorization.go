@@ -38,8 +38,8 @@ func (p *PreAuthorization) String() string {
 	return struct2string(p)
 }
 
-// NewPreauthorization ...
-func (m *MangoPay) NewPreauthorization(author Consumer, amount Money, secureMode, cardID, returnURL string) (*PreAuthorization, error) {
+// NewPreAuthorization ...
+func (m *MangoPay) NewPreAuthorization(author Consumer, amount Money, secureMode, cardID, returnURL string) (*PreAuthorization, error) {
 	msg := "new preauthorization: "
 	if author == nil {
 		return nil, errors.New(msg + "nil author")
