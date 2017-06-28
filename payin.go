@@ -362,9 +362,10 @@ func (p *PreAuthorizedPayIn) Save() error {
 
 // Refund allows to refund a pay-in. Call the Refund's Save() method
 // to make a request to reimburse a user on his payment card.
-func (p *PayIn) Refund() (*Refund, error) {
+func (p *PayIn) Refund(debitedFunds Money) (*Refund, error) {
 	r := &Refund{
 		ProcessReply: ProcessReply{},
+		DebitedFunds: debitedFunds,
 		payIn:        p,
 		kind:         payInRefund,
 	}

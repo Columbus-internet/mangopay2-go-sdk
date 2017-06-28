@@ -69,7 +69,7 @@ func (r *Refund) save() error {
 
 	var action mangoAction
 	var service *MangoPay
-	r.String()
+	//r.String()
 	switch r.kind {
 	case transferRefund:
 		action = actionCreateTransferRefund
@@ -80,6 +80,7 @@ func (r *Refund) save() error {
 		action = actionCreatePayInRefund
 		data["AuthorId"] = r.payIn.AuthorId
 		data["PayInId"] = r.payIn.Id
+		data["DebitedFunds"] = r.DebitedFunds
 		service = r.payIn.service
 	}
 	ins, err := service.anyRequest(new(Refund), action, data)
