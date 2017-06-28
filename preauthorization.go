@@ -99,3 +99,20 @@ func (p *PreAuthorization) Save() error {
 	}
 	return nil
 }
+
+// CancelPreAuthorization ...
+func (m *MangoPay) CancelPreAuthorization(preAuthorizationID string) (*PreAuthorization, error) {
+	if preAuthorizationID == "" {
+		return nil, errors.New("empty preAuthorizationID")
+	}
+
+	data := JsonObject{}
+	data["PaymentStatus"] = "CANCELED"
+
+	tr, err := m.anyRequest(new(PreAuthorization), actionCancelPreAuthorization, data)
+	if err != nil {
+		return nil, err
+	}
+
+	return tr.(*PreAuthorization), nil
+}
