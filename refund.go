@@ -80,8 +80,12 @@ func (r *Refund) save() error {
 		action = actionCreatePayInRefund
 		data["AuthorId"] = r.payIn.AuthorId
 		data["PayInId"] = r.payIn.Id
-		data["DebitedFunds"] = r.DebitedFunds
-		data["Fees"] = r.Fees
+		if r.DebitedFunds.Amount > 0 {
+			data["DebitedFunds"] = r.DebitedFunds
+		}
+		if r.Fees.Amount > 0 {
+			data["Fees"] = r.Fees
+		}
 		service = r.payIn.service
 	}
 	ins, err := service.anyRequest(new(Refund), action, data)
