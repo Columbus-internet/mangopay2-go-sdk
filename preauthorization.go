@@ -116,3 +116,18 @@ func (m *MangoPay) CancelPreAuthorization(preAuthorizationID string) (*PreAuthor
 
 	return tr.(*PreAuthorization), nil
 }
+
+// PreAuthorization fetches preauthorization
+func (m *MangoPay) PreAuthorization(id string) (*PreAuthorization, error) {
+	if id == "" {
+		return nil, errors.New("empty id")
+	}
+
+	p, err := m.anyRequest(new(PreAuthorization), actionFetchPreAuthorization, JsonObject{"Id": id})
+	if err != nil {
+		return nil, err
+	}
+	result := p.(*PreAuthorization)
+	result.service = m
+	return result, nil
+}

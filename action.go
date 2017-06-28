@@ -61,6 +61,7 @@ const (
 	actionListUserKYCDocuments
 
 	actionCreatePreAuthorization
+	actionFetchPreAuthorization
 	actionCancelPreAuthorization
 )
 
@@ -280,6 +281,11 @@ var mangoRequests = map[mangoAction]mangoRequest{
 		"POST",
 		"/preauthorizations/card/direct",
 		nil,
+	},
+	actionFetchPreAuthorization: mangoRequest{
+		"GET",
+		"/preauthorizations/{{Id}}}",
+		JsonObject{"Id": ""},
 	},
 	actionCancelPreAuthorization: mangoRequest{
 		"PUT",
