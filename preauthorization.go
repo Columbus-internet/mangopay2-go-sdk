@@ -107,6 +107,7 @@ func (m *MangoPay) CancelPreAuthorization(preAuthorizationID string) (*PreAuthor
 	}
 
 	data := JsonObject{}
+	data["Id"] = preAuthorizationID
 	data["PaymentStatus"] = "CANCELED"
 
 	tr, err := m.anyRequest(new(PreAuthorization), actionCancelPreAuthorization, data)
