@@ -284,12 +284,12 @@ var mangoRequests = map[mangoAction]mangoRequest{
 	},
 	actionFetchPreAuthorization: mangoRequest{
 		"GET",
-		"/preauthorizations/{{Id}}}",
+		"/preauthorizations/{{Id}}",
 		JsonObject{"Id": ""},
 	},
 	actionCancelPreAuthorization: mangoRequest{
 		"PUT",
-		"/preauthorizations/{{Id}}}",
+		"/preauthorizations/{{Id}}",
 		JsonObject{"Id": ""},
 	},
 }
