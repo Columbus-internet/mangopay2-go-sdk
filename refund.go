@@ -6,7 +6,6 @@ package mango
 
 import (
 	"encoding/json"
-	"log"
 )
 
 // List of refunds.
@@ -77,7 +76,6 @@ func (r *Refund) save() error {
 		data["AuthorId"] = r.transfer.AuthorId
 		data["TransferId"] = r.transfer.Id
 		service = r.transfer.service
-		log.Println("transfer refund")
 	case payInRefund:
 		action = actionCreatePayInRefund
 		data["AuthorId"] = r.payIn.AuthorId
@@ -89,10 +87,7 @@ func (r *Refund) save() error {
 			data["Fees"] = r.Fees
 		}
 		service = r.payIn.service
-		log.Println("transfer refund")
-
 	}
-	log.Printf("%#v\n", service)
 	ins, err := service.anyRequest(new(Refund), action, data)
 	if err != nil {
 		return err

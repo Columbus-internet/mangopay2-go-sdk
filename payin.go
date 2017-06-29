@@ -389,5 +389,6 @@ func (m *MangoPay) PayIn(id string) (*WebPayIn, error) {
 	}
 	result := p.(*WebPayIn)
 	result.service = m
+	result.PayIn.service = m
 	return result, nil
 }
