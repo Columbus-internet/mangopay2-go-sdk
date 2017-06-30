@@ -362,13 +362,27 @@ func (p *PreAuthorizedPayIn) Save() error {
 
 // Refund allows to refund a pay-in. Call the Refund's Save() method
 // to make a request to reimburse a user on his payment card.
-func (p *PayIn) Refund(debitedFunds, fees Money) (*Refund, error) {
+func (p *PayIn) Refund() (*Refund, error) {
+	r := &Refund{
+		ProcessReply: ProcessReply{},
+		payIn:        p,
+		kind:         payInRefund,
+	}
+	if err := r.save(); err != nil {
+		return nil, err
+	}
+	return r, nil
+}
+
+// PartialRefund allows to partial refund a pay-in. Call the Refund's Save() method
+// to make a request to reimburse a user on his payment card.
+func (p *PayIn) PartialRefund(debitedFunds, fees Money) (*Refund, error) {
 	r := &Refund{
 		ProcessReply: ProcessReply{},
 		DebitedFunds: debitedFunds,
 		Fees:         fees,
 		payIn:        p,
-		kind:         payInRefund,
+		kind:         payInPartialRefund,
 	}
 	if err := r.save(); err != nil {
 		return nil, err
