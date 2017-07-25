@@ -133,9 +133,18 @@ func (s *MangoPay) request(ma mangoAction, data JsonObject) (*http.Response, err
 				return nil, errors.New(fmt.Sprintf("missing keyword %s", name))
 			}
 			path = strings.Replace(path, "{{"+name+"}}", fmt.Sprintf("%v", data[name]), -1)
+			delete(data, name)
 		}
 	} else {
 		path = mr.Path
+	}
+
+	if page, pageOk := data["page"]; pageOk {
+		if perPage, perPageOk := data["per_page"]; perPageOk {
+			path = fmt.Sprintf("%s?page=%s&per_page=%s", path, page, perPage)
+			delete(data, "page")
+			delete(data, "per_page")
+		}
 	}
 
 	body, err := json.Marshal(data)
