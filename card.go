@@ -105,6 +105,7 @@ func (m *MangoPay) Cards(user Consumer) (CardList, error) {
 			break
 		}
 		result = append(result, cl...)
+		page++
 	}
 	return result, nil
 }
