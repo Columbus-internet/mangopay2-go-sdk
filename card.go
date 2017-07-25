@@ -87,26 +87,27 @@ func (m *MangoPay) Cards(user Consumer) (CardList, error) {
 		return nil, errors.New("user has empty Id")
 	}
 	data := JsonObject{"Id": id}
-	page := 1
+	//page := 1
 	result := CardList{}
-	for {
-		data["page"] = page
-		data["per_page"] = 100
-		data["sort"] = "CreationDate:DESC"
-		resp, err := m.request(actionFetchUserCards, data)
-		if err != nil {
-			return nil, err
-		}
-		cl := CardList{}
-		if err := m.unMarshalJSONResponse(resp, &cl); err != nil {
-			return nil, err
-		}
-		if len(cl) == 0 {
-			break
-		}
-		result = append(result, cl...)
-		page++
+	// for {
+	// 	data["page"] = page
+	// 	data["per_page"] = 100
+	// 	data["sort"] = "CreationDate:DESC"
+	resp, err := m.request(actionFetchUserCards, data)
+	if err != nil {
+		return nil, err
 	}
+	cl := CardList{}
+	if err := m.unMarshalJSONResponse(resp, &cl); err != nil {
+		return nil, err
+	}
+	// if len(cl) == 0 {
+	// 	break
+	// }
+	result = append(result, cl...)
+	//page++
+	//break
+	//}
 	return result, nil
 }
 
