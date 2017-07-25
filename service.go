@@ -142,10 +142,11 @@ func (s *MangoPay) request(ma mangoAction, data JsonObject) (*http.Response, err
 	if page, pageOk := data["page"]; pageOk {
 		if perPage, perPageOk := data["per_page"]; perPageOk {
 			if sort, sortOk := data["sort"]; sortOk {
-			path = fmt.Sprintf("%s?page=%d&per_page=%d&sort=%s", path, page.(int), perPage.(int), sort.(string))
-			delete(data, "page")
-			delete(data, "per_page")
-			delete(data, "sort")
+				path = fmt.Sprintf("%s?page=%d&per_page=%d&sort=%s", path, page.(int), perPage.(int), sort.(string))
+				delete(data, "page")
+				delete(data, "per_page")
+				delete(data, "sort")
+			}
 		}
 	}
 
