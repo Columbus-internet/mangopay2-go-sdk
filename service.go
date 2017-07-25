@@ -133,7 +133,6 @@ func (s *MangoPay) request(ma mangoAction, data JsonObject) (*http.Response, err
 				return nil, errors.New(fmt.Sprintf("missing keyword %s", name))
 			}
 			path = strings.Replace(path, "{{"+name+"}}", fmt.Sprintf("%v", data[name]), -1)
-			delete(data, name)
 		}
 	} else {
 		path = mr.Path
