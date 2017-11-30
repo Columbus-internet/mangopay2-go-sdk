@@ -60,6 +60,8 @@ type BankAccount struct {
 	// Required for OTHER type
 	Country string
 
+	Active bool
+
 	service *MangoPay
 	atype   AccountType
 }
