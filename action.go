@@ -50,6 +50,7 @@ const (
 
 	actionCreateBankAccount
 	actionFetchBankAccount
+	actionDeactivateBankAccount
 
 	actionCreatePayOut
 	actionFetchPayOut
@@ -232,6 +233,11 @@ var mangoRequests = map[mangoAction]mangoRequest{
 	},
 	actionFetchBankAccount: mangoRequest{
 		"GET",
+		"/users/{{UserId}}/bankaccounts/{{Id}}",
+		JsonObject{"UserId": "", "Id": ""},
+	},
+	actionDeactivateBankAccount: mangoRequest{
+		"PUT",
 		"/users/{{UserId}}/bankaccounts/{{Id}}",
 		JsonObject{"UserId": "", "Id": ""},
 	},

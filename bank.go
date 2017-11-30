@@ -182,3 +182,15 @@ func (m *MangoPay) BankAccounts(user Consumer) (BankAccountList, error) {
 	}
 	return *(accs.(*BankAccountList)), nil
 }
+
+func (m *MangoPay) DeactivateBankAccount(user Consumer, id string) error {
+	userId := consumerId(user)
+	if userId == "" {
+		return errors.New("user has empty Id")
+	}
+	_, err := m.anyRequest(new(BankAccount), actionDeactivateBankAccount, JsonObject{"Id": id, "UserId": userId, "Active": false})
+	if err != nil {
+		return err
+	}
+	return nil
+}
