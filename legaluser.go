@@ -13,10 +13,10 @@ type LegalUser struct {
 	User
 	Name                                  string
 	LegalPersonType                       string
-	HeadquartersAddress                   string
+	HeadquartersAddress                   Address
 	LegalRepresentativeFirstName          string
 	LegalRepresentativeLastName           string
-	LegalRepresentativeAddress            string
+	LegalRepresentativeAddress            Address
 	LegalRepresentativeEmail              string
 	LegalRepresentativeBirthday           int64
 	LegalRepresentativeNationality        string
